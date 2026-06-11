@@ -3,28 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DAF Trindade — Solicitações de Insumos</title>
+<title>DAF Trindade</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#f0f4f8;min-height:100vh}
-.bar{background:#1a5276;padding:13px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25)}
-.bar-logo{background:#fff;border-radius:7px;padding:5px 10px;font-size:11px;font-weight:700;color:#1a5276;line-height:1.3;text-align:center;flex-shrink:0}
-.bar h1{color:#fff;font-size:16px;font-weight:700}
+.bar{background:#1a5276;padding:13px 20px;display:flex;align-items:center;gap:12px}
+.bar-logo{background:#fff;border-radius:7px;padding:5px 9px;font-size:10px;font-weight:700;color:#1a5276;line-height:1.3;text-align:center;flex-shrink:0}
+.bar h1{color:#fff;font-size:15px;font-weight:700}
 .bar p{color:rgba(255,255,255,.8);font-size:11px;margin-top:1px}
-.bar-status{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.8)}
+.bar-st{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.8);white-space:nowrap}
 .dot{width:8px;height:8px;border-radius:50%;background:#9ca3af;flex-shrink:0}
-.dot.ok{background:#4ade80}.dot.err{background:#f87171}.dot.conn{background:#fbbf24;animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-nav{background:#fff;border-bottom:1px solid #d1d5db;display:flex;box-shadow:0 1px 3px rgba(0,0,0,.06);position:sticky;top:57px;z-index:99}
-.nb{flex:1;padding:12px 8px;font-size:14px;font-weight:600;color:#6b7280;border:none;background:transparent;cursor:pointer;border-bottom:3px solid transparent;transition:.15s}
+.dot.ok{background:#4ade80}.dot.err{background:#f87171}.dot.conn{background:#fbbf24}
+nav{background:#fff;border-bottom:1px solid #d1d5db;display:flex}
+.nb{flex:1;padding:12px 8px;font-size:13px;font-weight:600;color:#6b7280;border:none;background:transparent;cursor:pointer;border-bottom:3px solid transparent;transition:.15s}
 .nb.on{color:#1a5276;border-bottom-color:#1a5276;background:#eaf3f8}
 .nb:hover:not(.on){background:#f9fafb;color:#1a5276}
 .wrap{max-width:1100px;margin:0 auto;padding:20px 16px}
-.pg{display:none}.pg.on{display:block}
+.pg{display:none!important}.pg.on{display:block!important}
 .box{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:18px;margin-bottom:16px}
-.ttl{font-size:12px;font-weight:700;color:#1a5276;text-transform:uppercase;letter-spacing:.07em;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.ttl{font-size:12px;font-weight:700;color:#1a5276;text-transform:uppercase;letter-spacing:.07em;margin-bottom:14px}
 label{display:block;font-size:12px;font-weight:600;color:#374151;margin-bottom:4px}
 input,select,textarea{width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:7px;font-size:13px;color:#111;background:#fff;transition:.15s;font-family:Arial,sans-serif}
 input:focus,select:focus,textarea:focus{outline:none;border-color:#1a5276;box-shadow:0 0 0 3px rgba(26,82,118,.1)}
@@ -33,7 +32,6 @@ textarea{resize:vertical;min-height:88px}
 .req{color:#dc2626}
 .g1{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:12px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}
 .og{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .op{border:1.5px solid #e5e7eb;border-radius:8px;padding:12px 14px;cursor:pointer;font-size:13px;font-weight:600;color:#6b7280;display:flex;align-items:center;gap:10px;transition:.15s;background:#fff;user-select:none}
@@ -51,8 +49,7 @@ textarea{resize:vertical;min-height:88px}
 .br{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
 .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
 .sc{background:#eaf3f8;border-radius:8px;padding:14px;text-align:center}
-.sn{font-size:24px;font-weight:700;color:#1a5276}
-.sl{font-size:11px;color:#1a5276;margin-top:3px;opacity:.8}
+.sn{font-size:24px;font-weight:700;color:#1a5276}.sl{font-size:11px;color:#1a5276;margin-top:3px;opacity:.8}
 .sr{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
 .sr input,.sr select{padding:9px 12px;border:1.5px solid #d1d5db;border-radius:8px;font-size:13px;background:#fff;color:#111;font-family:Arial,sans-serif}
 .sr input{flex:1;min-width:200px}
@@ -61,111 +58,41 @@ table.dt{width:100%;border-collapse:collapse;font-size:12px}
 table.dt th{background:#1a5276;color:#fff;padding:10px 12px;text-align:left;font-size:11px;font-weight:700;white-space:nowrap}
 table.dt td{padding:9px 12px;border-bottom:1px solid #f3f4f6;color:#111;vertical-align:middle}
 table.dt tr:hover td{background:#f0f9ff}
-table.dt tr.verificado td{background:#f0fdf4;color:#6b7280}
+table.dt tr.vfd td{background:#f0fdf4;color:#6b7280}
 .bx{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
 .bm{background:#d1fae5;color:#065f46}.bf{background:#fef3c7;color:#92400e}
 .bl{background:#dbeafe;color:#1e40af}.bd{background:#fce7f3;color:#9d174d}
 .bn{background:#d1fae5;color:#065f46}.ba{background:#fef3c7;color:#92400e}
-.bver{background:#f0fdf4;color:#166534}
+.bv{background:#f0fdf4;color:#166534}
 .ab{width:32px;height:32px;border-radius:7px;border:1px solid #e5e7eb;background:transparent;cursor:pointer;font-size:15px;display:inline-flex;align-items:center;justify-content:center;margin-right:3px;transition:.15s}
 .ab:hover{background:#f3f4f6;transform:scale(1.1)}
 .toast{position:fixed;top:18px;right:18px;padding:12px 20px;border-radius:8px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.2);opacity:0;transition:opacity .3s;pointer-events:none;color:#fff;max-width:340px}
 .toast.on{opacity:1}
 .ck-wrap{display:flex;align-items:center;gap:6px;cursor:pointer;justify-content:center}
 .ck-wrap input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:#0f6e56}
-.config-box{background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:20px;margin-bottom:16px}
-.config-box h2{font-size:15px;font-weight:700;color:#856404;margin-bottom:12px}
-.config-box p{font-size:13px;color:#533f03;line-height:1.7;margin-bottom:10px}
-.config-box input{background:#fff;border:1.5px solid #ffc107;font-size:13px;padding:8px 10px;border-radius:7px;width:100%;margin-bottom:8px}
-.config-box .step{background:#fff;border-radius:6px;padding:10px 12px;font-size:12px;color:#533f03;margin-bottom:6px;border-left:3px solid #ffc107;line-height:1.6}
-.config-box .step strong{color:#1a5276}
-.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:4px}
-@keyframes spin{to{transform:rotate(360deg)}}
-@media(max-width:700px){.g4{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.og{grid-template-columns:1fr}.g3{grid-template-columns:1fr}.g2{grid-template-columns:1fr}}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .6s linear infinite;vertical-align:middle;margin-right:4px}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media(max-width:700px){.g4{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.og{grid-template-columns:1fr}.g2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
 <div class="bar">
   <div class="bar-logo">PREFEITURA<br>TRINDADE</div>
-  <div>
-    <h1>Assistência Farmacêutica — DAF</h1>
-    <p>Prefeitura de Trindade — Secretaria de Saúde</p>
-  </div>
-  <div class="bar-status">
-    <div class="dot" id="dot"></div>
-    <span id="status-txt">Conectando...</span>
-  </div>
+  <div><h1>Assistência Farmacêutica — DAF</h1><p>Prefeitura de Trindade — Secretaria de Saúde</p></div>
+  <div class="bar-st"><div class="dot conn" id="dot"></div><span id="st-txt">Conectando...</span></div>
 </div>
 
 <nav>
-  <button class="nb on" onclick="nav('f')">📋 Nova Solicitação</button>
-  <button class="nb" onclick="nav('p')">📊 Painel DAF</button>
-  <button class="nb" onclick="nav('c')">⚙️ Configurar</button>
+  <button class="nb on" id="nb-f" onclick="nav('f')">📋 Nova Solicitação</button>
+  <button class="nb" id="nb-p" onclick="nav('p')">📊 Painel DAF</button>
+  <button class="nb" id="nb-c" onclick="nav('c')">⚙️ Configurar</button>
 </nav>
 
 <div class="wrap">
 
-<!-- ========== CONFIGURAÇÃO SUPABASE ========== -->
-<div id="pc" class="pg">
-  <div class="config-box">
-    <h2>⚙️ Configuração do Banco de Dados (Supabase)</h2>
-    <p>Configure uma vez. Após salvar, todos os dispositivos que acessarem este link compartilharão os mesmos dados em tempo real.</p>
-
-    <div class="step"><strong>Passo 1:</strong> Acesse <strong>supabase.com</strong> → clique em "Start your project" → crie conta gratuita com Google ou e-mail.</div>
-    <div class="step"><strong>Passo 2:</strong> Clique em "New project" → dê o nome <strong>daf-trindade</strong> → escolha uma senha → região <strong>South America (São Paulo)</strong> → clique "Create new project". Aguarde ~2 minutos.</div>
-    <div class="step"><strong>Passo 3:</strong> No menu lateral, clique em <strong>SQL Editor</strong> → cole o código SQL abaixo e clique em <strong>Run</strong>:</div>
-
-    <div style="background:#1e293b;border-radius:8px;padding:14px;margin-bottom:10px;position:relative">
-      <pre id="sql-code" style="color:#e2e8f0;font-size:11px;white-space:pre-wrap;font-family:monospace;line-height:1.6">CREATE TABLE IF NOT EXISTS solicitacoes (
-  id bigint generated always as identity primary key,
-  protocolo text not null,
-  data_cadastro text,
-  criado_em timestamptz default now(),
-  situacao text,
-  tipo text,
-  nome text not null,
-  data_nasc date,
-  idade text,
-  sexo text,
-  sus text,
-  mae text,
-  endereco text,
-  setor text,
-  tel1 text,
-  tel2 text,
-  descricao text,
-  servidor text,
-  obs text,
-  verificado boolean default false,
-  verificado_em text
-);
-
-ALTER TABLE solicitacoes ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "allow_all" ON solicitacoes FOR ALL USING (true) WITH CHECK (true);</pre>
-      <button onclick="copiarSQL()" style="position:absolute;top:8px;right:8px;background:#334155;color:#e2e8f0;border:none;border-radius:5px;padding:4px 10px;font-size:11px;cursor:pointer">📋 Copiar</button>
-    </div>
-
-    <div class="step"><strong>Passo 4:</strong> Vá em <strong>Project Settings → API</strong> (ícone de engrenagem no menu). Copie a <strong>Project URL</strong> e a chave <strong>anon public</strong> (em "Project API keys").</div>
-
-    <div style="margin-top:12px">
-      <label style="font-weight:700;color:#533f03;margin-bottom:4px">Project URL</label>
-      <input type="text" id="cfg-url" placeholder="https://xxxxxxxxxxx.supabase.co" oninput="salvarConfig()">
-      <label style="font-weight:700;color:#533f03;margin-bottom:4px;margin-top:8px">Anon Key (chave pública)</label>
-      <input type="text" id="cfg-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." oninput="salvarConfig()">
-      <button class="btn baz" style="margin-top:10px;width:100%" onclick="testarConexao()">🔌 Testar conexão e salvar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ========== FORMULÁRIO ========== -->
+<!-- FORMULÁRIO -->
 <div id="pf" class="pg on">
-  <div id="aviso-config" class="config-box" style="display:none">
-    <h2>⚠️ Banco de dados não configurado</h2>
-    <p>Para que os cadastros sejam compartilhados entre todos os dispositivos, configure o banco de dados Supabase na aba <strong>⚙️ Configurar</strong>.</p>
-    <button class="btn baz" onclick="nav('c')">⚙️ Configurar agora</button>
-  </div>
-
   <div class="box">
     <div class="ttl">🗂️ Identificação da Solicitação</div>
     <div style="margin-bottom:8px"><label>Situação do cadastro <span class="req">*</span></label></div>
@@ -195,14 +122,14 @@ CREATE POLICY "allow_all" ON solicitacoes FOR ALL USING (true) WITH CHECK (true)
     <div class="g1"><div><label>Nome completo <span class="req">*</span></label><input type="text" id="f-nome" placeholder="Nome do paciente" oninput="this.value=this.value.toUpperCase()"></div></div>
     <div class="g4">
       <div><label>Data de nascimento <span class="req">*</span></label><input type="date" id="f-nasc" onchange="calcIdade()"></div>
-      <div><label>Idade (calculada)</label><input type="text" id="f-idade" readonly></div>
+      <div><label>Idade</label><input type="text" id="f-idade" readonly></div>
       <div><label>Sexo</label><select id="f-sexo"><option value="M">M — Masculino</option><option value="F">F — Feminino</option></select></div>
-      <div><label>N° Cartão SUS <span class="req">*</span></label><input type="text" id="f-sus" placeholder="000 0000 0000 0000"></div>
+      <div><label>N° SUS <span class="req">*</span></label><input type="text" id="f-sus" placeholder="000 0000 0000 0000"></div>
     </div>
     <div class="g1"><div><label>Nome da mãe / responsável</label><input type="text" id="f-mae" oninput="this.value=this.value.toUpperCase()"></div></div>
     <div class="g2">
       <div><label>Endereço (rua, quadra, lote)</label><input type="text" id="f-end" placeholder="Ex: Rua Octávio Dias QD 05 LT 26" oninput="this.value=this.value.toUpperCase()"></div>
-      <div><label>Setor / Bairro</label><input type="text" id="f-setor" placeholder="Ex: St. Monte Sinai" oninput="this.value=this.value.toUpperCase()"></div>
+      <div><label>Setor / Bairro</label><input type="text" id="f-set" placeholder="Ex: St. Monte Sinai" oninput="this.value=this.value.toUpperCase()"></div>
     </div>
     <div class="g2">
       <div><label>Telefone 1 <span class="req">*</span></label><input type="tel" id="f-tel1" placeholder="(62) 9 0000-0000"></div>
@@ -213,7 +140,7 @@ CREATE POLICY "allow_all" ON solicitacoes FOR ALL USING (true) WITH CHECK (true)
   <div class="box">
     <div class="ttl">📦 Itens Solicitados</div>
     <div class="g1"><div><label>Descrição / Especificação completa <span class="req">*</span></label>
-      <textarea id="f-desc" placeholder="Descreva todos os itens com quantidade e especificação.&#10;Ex: Fórmula hidrolisada sem lactose — 15 latas&#10;Equipo 30 und / Frasco 30 und / Seringa 30 und"></textarea>
+      <textarea id="f-desc" placeholder="Descreva os itens com quantidade.&#10;Ex: Fórmula hidrolisada sem lactose — 15 latas&#10;Equipo 30 und / Frasco 30 und / Seringa 30 und"></textarea>
     </div></div>
     <div class="g2">
       <div><label>Servidor responsável</label><input type="text" id="f-srv" placeholder="Nome de quem realizou o cadastro"></div>
@@ -222,12 +149,12 @@ CREATE POLICY "allow_all" ON solicitacoes FOR ALL USING (true) WITH CHECK (true)
   </div>
 
   <div class="br">
-    <button class="btn baz" id="btn-salvar" onclick="salvar()">💾 Salvar e gerar documento</button>
-    <button class="btn bot" onclick="limpar()">🗑️ Limpar formulário</button>
+    <button class="btn baz" id="btn-sv" onclick="salvar()">💾 Salvar e gerar documento</button>
+    <button class="btn bot" onclick="limpar()">🗑️ Limpar</button>
   </div>
 </div>
 
-<!-- ========== PAINEL DAF ========== -->
+<!-- PAINEL -->
 <div id="pp" class="pg">
   <div class="stats">
     <div class="sc"><div class="sn" id="s0">—</div><div class="sl">Total</div></div>
@@ -248,446 +175,458 @@ CREATE POLICY "allow_all" ON solicitacoes FOR ALL USING (true) WITH CHECK (true)
     <table class="dt">
       <thead><tr>
         <th>Protocolo</th><th>Data</th><th>Situação</th><th>Tipo</th>
-        <th>Paciente</th><th>SUS</th><th>Telefone</th><th>End./Setor</th>
+        <th>Paciente</th><th>SUS</th><th>Telefone</th><th>Endereço/Setor</th>
         <th>Descrição</th><th style="text-align:center">Verificado</th><th>Ações</th>
       </tr></thead>
-      <tbody id="tb"><tr><td colspan="11" style="text-align:center;padding:32px;color:#9ca3af">Carregando dados...</td></tr></tbody>
+      <tbody id="tb"><tr><td colspan="11" style="text-align:center;padding:32px;color:#9ca3af">Carregando...</td></tr></tbody>
     </table>
   </div>
   <p id="ct" style="font-size:12px;color:#9ca3af;margin-top:8px"></p>
 </div>
 
-</div><!-- /wrap -->
+<!-- CONFIGURAR -->
+<div id="pc" class="pg">
+  <div class="box">
+    <div class="ttl">⚙️ Configuração do Banco de Dados</div>
+    <p style="font-size:13px;color:#374151;margin-bottom:16px;line-height:1.7">
+      As credenciais já estão configuradas automaticamente. Use este painel apenas se precisar alterar a conexão.
+    </p>
+    <div class="g1">
+      <div><label>Project URL</label><input type="text" id="cfg-url" placeholder="https://xxx.supabase.co"></div>
+      <div><label>Anon Key</label><input type="text" id="cfg-key" placeholder="eyJ..."></div>
+    </div>
+    <div class="br">
+      <button class="btn baz" onclick="testar()">🔌 Testar e salvar conexão</button>
+      <button class="btn bot" onclick="resetCfg()">↩️ Restaurar padrão</button>
+    </div>
+    <div id="cfg-msg" style="margin-top:12px;font-size:13px;display:none"></div>
+  </div>
+</div>
+
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
-// ============================================================
-// SUPABASE CONFIG
-// ============================================================
-let supabase = null;
-let D = [];
+// =============================================
+// CREDENCIAIS SUPABASE
+// =============================================
+var SB_URL = 'https://kjwfzsouoeolycekyldd.supabase.co';
+var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtqd2Z6c291b2VvbHljZWt5bGRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMjcxODksImV4cCI6MjA5NjcwMzE4OX0.aRWc4yBiWx7W8NjQIcHn7JvxAqDho0fnvdzKSndOUDU';
 
-function getConfig(){
-  return {
-    url: localStorage.getItem('sb_url') || '',
-    key: localStorage.getItem('sb_key') || ''
-  };
-}
+var sb = null;
+var D = [];
 
-function initSupabase(){
-  const cfg = getConfig();
-  if(cfg.url && cfg.key){
-    try{
-      supabase = window.supabase.createClient(cfg.url, cfg.key);
-      setStatus('conn','Conectando...');
-      return true;
-    }catch(e){ setStatus('err','Erro na configuração'); return false; }
-  }
-  setStatus('err','Não configurado');
-  return false;
-}
-
-function setStatus(tipo, txt){
-  const dot = document.getElementById('dot');
-  const stxt = document.getElementById('status-txt');
-  dot.className = 'dot ' + tipo;
-  stxt.textContent = txt;
-}
-
-function salvarConfig(){
-  localStorage.setItem('sb_url', document.getElementById('cfg-url').value.trim());
-  localStorage.setItem('sb_key', document.getElementById('cfg-key').value.trim());
-}
-
-async function testarConexao(){
-  salvarConfig();
-  if(!initSupabase()){ toast('URL ou Key inválidos.',false); return; }
-  setStatus('conn','Testando...');
-  try{
-    const {error} = await supabase.from('solicitacoes').select('id').limit(1);
-    if(error) throw error;
-    setStatus('ok','Conectado ✓');
-    toast('✅ Conexão com Supabase estabelecida!');
-    setTimeout(()=>nav('f'), 1200);
-  }catch(e){
-    setStatus('err','Falha na conexão');
-    toast('❌ Falha: '+e.message, false);
+function initSB() {
+  var url = localStorage.getItem('sb_url') || SB_URL;
+  var key = localStorage.getItem('sb_key') || SB_KEY;
+  try {
+    sb = window.supabase.createClient(url, key);
+    return true;
+  } catch(e) {
+    console.error('Supabase init error:', e);
+    return false;
   }
 }
 
-function copiarSQL(){
-  const txt = document.getElementById('sql-code').textContent;
-  navigator.clipboard.writeText(txt).then(()=>toast('SQL copiado!'));
+function setStatus(tipo, txt) {
+  document.getElementById('dot').className = 'dot ' + tipo;
+  document.getElementById('st-txt').textContent = txt;
 }
 
-// ============================================================
-// NAV
-// ============================================================
-function nav(x){
-  document.querySelectorAll('.pg').forEach(e=>e.classList.remove('on'));
-  document.querySelectorAll('.nb').forEach(e=>e.classList.remove('on'));
-  document.getElementById('p'+x).classList.add('on');
-  document.querySelectorAll('.nb')[['f','p','c'].indexOf(x)].classList.add('on');
-  if(x==='p') carregarDados();
-  if(x==='f') checkConfig();
-  if(x==='c'){
-    const cfg = getConfig();
-    document.getElementById('cfg-url').value = cfg.url;
-    document.getElementById('cfg-key').value = cfg.key;
+// =============================================
+// NAVEGAÇÃO
+// =============================================
+function nav(x) {
+  document.getElementById('pf').classList.remove('on');
+  document.getElementById('pp').classList.remove('on');
+  document.getElementById('pc').classList.remove('on');
+  document.getElementById('nb-f').classList.remove('on');
+  document.getElementById('nb-p').classList.remove('on');
+  document.getElementById('nb-c').classList.remove('on');
+
+  document.getElementById('p' + x).classList.add('on');
+  document.getElementById('nb-' + x).classList.add('on');
+
+  if (x === 'p') carregarDados();
+  if (x === 'c') {
+    document.getElementById('cfg-url').value = localStorage.getItem('sb_url') || SB_URL;
+    document.getElementById('cfg-key').value = localStorage.getItem('sb_key') || SB_KEY;
   }
 }
 
-function checkConfig(){
-  const cfg = getConfig();
-  const aviso = document.getElementById('aviso-config');
-  aviso.style.display = (!cfg.url || !cfg.key) ? 'block' : 'none';
-}
-
-// ============================================================
+// =============================================
 // FORMULÁRIO
-// ============================================================
-function setSit(s){
+// =============================================
+function setSit(s) {
   document.getElementById('f-sit').value = s;
-  document.getElementById('op-novo').className  = 'op' + (s==='Novo Protocolo' ? ' sel-vd' : '');
-  document.getElementById('op-atual').className = 'op' + (s==='Atualização de Cadastro' ? ' sel-am' : '');
+  document.getElementById('op-novo').className = 'op' + (s === 'Novo Protocolo' ? ' sel-vd' : '');
+  document.getElementById('op-atual').className = 'op' + (s === 'Atualização de Cadastro' ? ' sel-am' : '');
 }
 
-function setTipo(el, t){
-  document.querySelectorAll('.tipo').forEach(e=>e.className='op tipo');
+function setTipo(el, t) {
+  document.querySelectorAll('.tipo').forEach(function(e) { e.className = 'op tipo'; });
   el.className = 'op tipo sel-az';
   document.getElementById('f-tipo').value = t;
 }
 
-function calcIdade(){
-  const v = document.getElementById('f-nasc').value;
-  if(!v){ document.getElementById('f-idade').value=''; return; }
-  const d=new Date(v), n=new Date();
-  let a=n.getFullYear()-d.getFullYear();
-  if(n < new Date(n.getFullYear(),d.getMonth(),d.getDate())) a--;
-  document.getElementById('f-idade').value = a<2
-    ? Math.round((n-d)/(1000*60*60*24*30.44))+' meses' : a+' anos';
+function calcIdade() {
+  var v = document.getElementById('f-nasc').value;
+  if (!v) { document.getElementById('f-idade').value = ''; return; }
+  var d = new Date(v), n = new Date();
+  var a = n.getFullYear() - d.getFullYear();
+  if (n < new Date(n.getFullYear(), d.getMonth(), d.getDate())) a--;
+  document.getElementById('f-idade').value = a < 2
+    ? Math.round((n - d) / (1000 * 60 * 60 * 24 * 30.44)) + ' meses'
+    : a + ' anos';
 }
 
-function toast(msg, ok=true){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.style.background=ok?'#0f6e56':'#991b1b';
-  t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),3200);
+function toast(msg, ok) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = (ok === false) ? '#991b1b' : '#0f6e56';
+  t.classList.add('on');
+  setTimeout(function() { t.classList.remove('on'); }, 3200);
 }
 
-function g(id){ return document.getElementById(id).value; }
+function g(id) { return document.getElementById(id).value; }
 
-async function salvar(){
-  const sit=g('f-sit'), proto=g('f-proto').trim(), tipo=g('f-tipo'),
-        nome=g('f-nome').trim(), sus=g('f-sus').trim(),
-        nasc=g('f-nasc'), desc=g('f-desc').trim();
-  if(!sit)  { toast('⚠ Selecione: Novo Protocolo ou Atualização',false); return; }
-  if(!proto){ toast('⚠ Informe o número do protocolo',false); return; }
-  if(!tipo) { toast('⚠ Selecione o tipo de solicitação',false); return; }
-  if(!nome) { toast('⚠ Informe o nome do paciente',false); return; }
-  if(!sus)  { toast('⚠ Informe o N° SUS',false); return; }
-  if(!nasc) { toast('⚠ Informe a data de nascimento',false); return; }
-  if(!desc) { toast('⚠ Descreva os itens solicitados',false); return; }
+async function salvar() {
+  var sit  = g('f-sit');
+  var proto = g('f-proto').trim();
+  var tipo  = g('f-tipo');
+  var nome  = g('f-nome').trim();
+  var sus   = g('f-sus').trim();
+  var nasc  = g('f-nasc');
+  var desc  = g('f-desc').trim();
 
-  const di = g('f-data');
-  const dc = di ? new Date(di+'T12:00').toLocaleDateString('pt-BR') : new Date().toLocaleDateString('pt-BR');
+  if (!sit)   { toast('⚠ Selecione: Novo Protocolo ou Atualização', false); return; }
+  if (!proto) { toast('⚠ Informe o número do protocolo', false); return; }
+  if (!tipo)  { toast('⚠ Selecione o tipo de solicitação', false); return; }
+  if (!nome)  { toast('⚠ Informe o nome do paciente', false); return; }
+  if (!sus)   { toast('⚠ Informe o N° SUS', false); return; }
+  if (!nasc)  { toast('⚠ Informe a data de nascimento', false); return; }
+  if (!desc)  { toast('⚠ Descreva os itens solicitados', false); return; }
 
-  const registro = {
-    protocolo: proto, data_cadastro: dc, situacao: sit, tipo,
-    nome, data_nasc: nasc || null, idade: g('f-idade'), sexo: g('f-sexo'), sus,
-    mae: g('f-mae'), endereco: g('f-end'), setor: g('f-setor'),
+  var di = g('f-data');
+  var dc = di ? new Date(di + 'T12:00').toLocaleDateString('pt-BR') : new Date().toLocaleDateString('pt-BR');
+
+  var reg = {
+    protocolo: proto, data_cadastro: dc, situacao: sit, tipo: tipo,
+    nome: nome, data_nasc: nasc || null, idade: g('f-idade'), sexo: g('f-sexo'), sus: sus,
+    mae: g('f-mae'), endereco: g('f-end'), setor: g('f-set'),
     tel1: g('f-tel1'), tel2: g('f-tel2'), descricao: desc,
     servidor: g('f-srv'), obs: g('f-obs'),
     verificado: false, verificado_em: ''
   };
 
-  const btn = document.getElementById('btn-salvar');
+  var btn = document.getElementById('btn-sv');
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Salvando...';
+  btn.innerHTML = '<span class="spin"></span> Salvando...';
 
-  try{
-    if(supabase){
-      const {data, error} = await supabase.from('solicitacoes').insert([registro]).select().single();
-      if(error) throw error;
-      toast('✅ Cadastro salvo! Protocolo '+proto);
-      const reg = {...registro, id: data.id, criado_em: data.criado_em};
+  try {
+    if (sb) {
+      var res = await sb.from('solicitacoes').insert([reg]).select().single();
+      if (res.error) throw res.error;
+      toast('✅ Cadastro salvo! Protocolo ' + proto);
+      var saved = Object.assign({}, reg, { id: res.data.id, criado_em: res.data.criado_em });
       limpar();
-      setTimeout(()=>{ if(confirm('Cadastro salvo!\n\nDeseja imprimir o documento agora?')) imprimir(reg); }, 400);
+      setTimeout(function() {
+        if (confirm('Cadastro salvo!\n\nDeseja imprimir o documento agora?')) imprimir(saved);
+      }, 400);
     } else {
-      // fallback local
-      const reg = {...registro, id: Date.now(), criado_em: new Date().toISOString()};
-      D.push(reg);
-      toast('⚠ Salvo localmente (Supabase não configurado)');
-      limpar();
-      setTimeout(()=>{ if(confirm('Cadastro salvo!\n\nDeseja imprimir o documento agora?')) imprimir(reg); }, 400);
+      toast('⚠ Sem conexão com banco de dados', false);
     }
-  }catch(e){
-    toast('❌ Erro ao salvar: '+e.message, false);
-  }finally{
+  } catch(e) {
+    toast('❌ Erro: ' + e.message, false);
+  } finally {
     btn.disabled = false;
     btn.innerHTML = '💾 Salvar e gerar documento';
   }
 }
 
-function limpar(){
-  ['f-proto','f-nome','f-nasc','f-mae','f-end','f-setor',
-   'f-tel1','f-tel2','f-desc','f-srv','f-obs','f-idade'].forEach(id=>{
-    const e=document.getElementById(id); if(e) e.value='';
+function limpar() {
+  ['f-proto','f-nome','f-nasc','f-mae','f-end','f-set','f-tel1','f-tel2','f-desc','f-srv','f-obs','f-idade'].forEach(function(id) {
+    var e = document.getElementById(id); if (e) e.value = '';
   });
-  document.getElementById('f-sexo').value='M';
-  document.getElementById('f-data').value=new Date().toISOString().split('T')[0];
-  document.getElementById('f-sit').value='';
-  document.getElementById('f-tipo').value='';
-  document.getElementById('op-novo').className='op';
-  document.getElementById('op-atual').className='op';
-  document.querySelectorAll('.tipo').forEach(e=>e.className='op tipo');
+  document.getElementById('f-sexo').value = 'M';
+  document.getElementById('f-data').value = new Date().toISOString().split('T')[0];
+  document.getElementById('f-sit').value = '';
+  document.getElementById('f-tipo').value = '';
+  document.getElementById('op-novo').className = 'op';
+  document.getElementById('op-atual').className = 'op';
+  document.querySelectorAll('.tipo').forEach(function(e) { e.className = 'op tipo'; });
 }
 
-// ============================================================
+// =============================================
 // PAINEL
-// ============================================================
-async function carregarDados(){
-  document.getElementById('tb').innerHTML='<tr><td colspan="11" style="text-align:center;padding:32px;color:#9ca3af"><span class="spinner" style="border-color:rgba(0,0,0,.15);border-top-color:#1a5276"></span> Carregando dados...</td></tr>';
-  if(!supabase){ toast('Supabase não configurado.',false); return; }
-  try{
-    const {data, error} = await supabase
-      .from('solicitacoes')
-      .select('*')
-      .order('criado_em', {ascending: false});
-    if(error) throw error;
-    D = data || [];
-    setStatus('ok','Conectado ✓');
+// =============================================
+async function carregarDados() {
+  document.getElementById('tb').innerHTML = '<tr><td colspan="11" style="text-align:center;padding:32px;color:#9ca3af">Carregando dados...</td></tr>';
+  if (!sb) { toast('Sem conexão com Supabase', false); return; }
+  try {
+    var res = await sb.from('solicitacoes').select('*').order('criado_em', { ascending: false });
+    if (res.error) throw res.error;
+    D = res.data || [];
+    setStatus('ok', 'Conectado ✓');
     fil();
     stat();
-  }catch(e){
-    setStatus('err','Erro');
-    toast('❌ Erro ao carregar: '+e.message, false);
+  } catch(e) {
+    setStatus('err', 'Erro de conexão');
+    toast('❌ Erro ao carregar: ' + e.message, false);
   }
 }
 
-function stat(){
-  const n=new Date(), m=n.getMonth(), y=n.getFullYear();
+function stat() {
+  var n = new Date(), m = n.getMonth(), y = n.getFullYear();
   document.getElementById('s0').textContent = D.length;
-  document.getElementById('s1').textContent = D.filter(r=>{
-    const d=new Date(r.criado_em); return d.getMonth()===m && d.getFullYear()===y;
+  document.getElementById('s1').textContent = D.filter(function(r) {
+    var d = new Date(r.criado_em); return d.getMonth() === m && d.getFullYear() === y;
   }).length;
-  document.getElementById('s2').textContent = D.filter(r=>!r.verificado).length;
-  document.getElementById('s3').textContent = D.filter(r=>r.verificado).length;
-  document.getElementById('s4').textContent = D.filter(r=>r.tipo==='Leites Especiais').length;
+  document.getElementById('s2').textContent = D.filter(function(r) { return !r.verificado; }).length;
+  document.getElementById('s3').textContent = D.filter(function(r) { return r.verificado; }).length;
+  document.getElementById('s4').textContent = D.filter(function(r) { return r.tipo === 'Leites Especiais'; }).length;
 }
 
-async function verificar(id, checked){
-  const agora = checked ? new Date().toLocaleString('pt-BR') : '';
-  try{
-    if(supabase){
-      const {error} = await supabase.from('solicitacoes')
-        .update({verificado: checked, verificado_em: agora})
-        .eq('id', id);
-      if(error) throw error;
+async function verificar(id, checked) {
+  var agora = checked ? new Date().toLocaleString('pt-BR') : '';
+  try {
+    if (sb) {
+      var res = await sb.from('solicitacoes').update({ verificado: checked, verificado_em: agora }).eq('id', id);
+      if (res.error) throw res.error;
     }
-    const r = D.find(x=>x.id===id);
-    if(r){ r.verificado=checked; r.verificado_em=agora; }
+    var r = D.find(function(x) { return x.id === id; });
+    if (r) { r.verificado = checked; r.verificado_em = agora; }
     stat();
-    toast(checked ? '✅ Marcado como verificado!' : 'Verificação removida.');
-  }catch(e){
-    toast('❌ Erro: '+e.message, false);
+    toast(checked ? '✅ Verificado!' : 'Verificação removida.');
+  } catch(e) {
+    toast('❌ Erro: ' + e.message, false);
   }
 }
 
-async function del(id){
-  if(!confirm('Excluir este cadastro? Esta ação não pode ser desfeita.')) return;
-  try{
-    if(supabase){
-      const {error} = await supabase.from('solicitacoes').delete().eq('id', id);
-      if(error) throw error;
+async function excluir(id) {
+  if (!confirm('Excluir este cadastro?')) return;
+  try {
+    if (sb) {
+      var res = await sb.from('solicitacoes').delete().eq('id', id);
+      if (res.error) throw res.error;
     }
-    D = D.filter(r=>r.id!==id);
+    D = D.filter(function(r) { return r.id !== id; });
     fil(); stat();
     toast('Cadastro removido.');
-  }catch(e){
-    toast('❌ Erro ao excluir: '+e.message, false);
+  } catch(e) {
+    toast('❌ Erro: ' + e.message, false);
   }
 }
 
-function fil(){
-  const q   = document.getElementById('q').value.toLowerCase();
-  const t   = document.getElementById('ft').value;
-  const s   = document.getElementById('fsit').value;
-  const v   = document.getElementById('fver').value;
-  let l = D;
-  if(q) l=l.filter(r=>r.nome.toLowerCase().includes(q)||r.protocolo.includes(q)||r.sus.includes(q)||(r.mae&&r.mae.toLowerCase().includes(q)));
-  if(t) l=l.filter(r=>r.tipo===t);
-  if(s) l=l.filter(r=>r.situacao===s);
-  if(v==='0') l=l.filter(r=>!r.verificado);
-  if(v==='1') l=l.filter(r=>r.verificado);
+function fil() {
+  var q   = document.getElementById('q').value.toLowerCase();
+  var t   = document.getElementById('ft').value;
+  var s   = document.getElementById('fsit').value;
+  var v   = document.getElementById('fver').value;
+  var l = D.slice();
+  if (q) l = l.filter(function(r) { return r.nome.toLowerCase().includes(q) || r.protocolo.includes(q) || r.sus.includes(q); });
+  if (t) l = l.filter(function(r) { return r.tipo === t; });
+  if (s) l = l.filter(function(r) { return r.situacao === s; });
+  if (v === '0') l = l.filter(function(r) { return !r.verificado; });
+  if (v === '1') l = l.filter(function(r) { return r.verificado; });
   draw(l);
 }
 
-const tmap  = {'Materiais Hospitalares / Curativo':'bm','Fraldas':'bf','Leites Especiais':'bl','Medicamentos Não Padronizados':'bd'};
-const tnome = {'Materiais Hospitalares / Curativo':'Mat./Curativo','Fraldas':'Fraldas','Leites Especiais':'Leites Esp.','Medicamentos Não Padronizados':'Medicamentos'};
+var tmap  = {'Materiais Hospitalares / Curativo':'bm','Fraldas':'bf','Leites Especiais':'bl','Medicamentos Não Padronizados':'bd'};
+var tnome = {'Materiais Hospitalares / Curativo':'Mat./Curativo','Fraldas':'Fraldas','Leites Especiais':'Leites Esp.','Medicamentos Não Padronizados':'Medicamentos'};
 
-function draw(l){
-  const tb = document.getElementById('tb');
-  document.getElementById('ct').textContent = l.length+' registro(s) de '+D.length+' total';
-  if(!l.length){
-    tb.innerHTML='<tr><td colspan="11" style="text-align:center;padding:40px;color:#9ca3af">Nenhum registro encontrado.</td></tr>';
+function draw(l) {
+  var tb = document.getElementById('tb');
+  document.getElementById('ct').textContent = l.length + ' registro(s) de ' + D.length + ' total';
+  if (!l.length) {
+    tb.innerHTML = '<tr><td colspan="11" style="text-align:center;padding:40px;color:#9ca3af">Nenhum registro encontrado.</td></tr>';
     return;
   }
-  tb.innerHTML = l.map(r=>`
-    <tr class="${r.verificado?'verificado':''}">
-      <td><strong style="color:#1a5276">${r.protocolo}</strong></td>
-      <td style="white-space:nowrap;font-size:11px">${r.data_cadastro||''}</td>
-      <td><span class="bx ${r.situacao==='Novo Protocolo'?'bn':'ba'}">${r.situacao==='Novo Protocolo'?'Novo':'Atualiz.'}</span></td>
-      <td><span class="bx ${tmap[r.tipo]||''}">${tnome[r.tipo]||r.tipo}</span></td>
-      <td>
-        <strong style="font-size:12px">${r.nome}</strong>
-        <br><span style="font-size:10px;color:#6b7280">${r.idade||''} · ${r.sexo||''}</span>
-        ${r.mae?'<br><span style="font-size:10px;color:#9ca3af">Mãe: '+r.mae+'</span>':''}
-      </td>
-      <td style="font-size:11px">${r.sus||''}</td>
-      <td style="font-size:11px">${r.tel1||''}${r.tel2?'<br>'+r.tel2:''}</td>
-      <td style="font-size:11px;color:#6b7280">${r.endereco||''}${r.setor?'<br>'+r.setor:''}</td>
-      <td style="font-size:11px;color:#6b7280;max-width:160px">${(r.descricao||'').substring(0,60)}${(r.descricao||'').length>60?'…':''}</td>
-      <td style="text-align:center">
-        <label class="ck-wrap" title="${r.verificado_em?'Verificado em: '+r.verificado_em:'Pendente'}">
-          <input type="checkbox" ${r.verificado?'checked':''} onchange="verificar(${r.id},this.checked)">
-          ${r.verificado?'<span class="bx bver" style="font-size:10px">✓ OK</span>':''}
-        </label>
-      </td>
-      <td style="white-space:nowrap">
-        <button class="ab" onclick='imprimir(D.find(x=>x.id===${r.id}))' title="Imprimir">🖨️</button>
-        <button class="ab" onclick='zap(D.find(x=>x.id===${r.id}))' title="WhatsApp">📲</button>
-        <button class="ab" onclick="del(${r.id})" title="Excluir">🗑️</button>
-      </td>
-    </tr>`).join('');
+  var html = '';
+  for (var i = 0; i < l.length; i++) {
+    var r = l[i];
+    var nasc = r.data_nasc ? new Date(r.data_nasc + 'T12:00').toLocaleDateString('pt-BR') : '';
+    html += '<tr class="' + (r.verificado ? 'vfd' : '') + '">' +
+      '<td><strong style="color:#1a5276">' + r.protocolo + '</strong></td>' +
+      '<td style="white-space:nowrap;font-size:11px">' + (r.data_cadastro || '') + '</td>' +
+      '<td><span class="bx ' + (r.situacao === 'Novo Protocolo' ? 'bn' : 'ba') + '">' + (r.situacao === 'Novo Protocolo' ? 'Novo' : 'Atualiz.') + '</span></td>' +
+      '<td><span class="bx ' + (tmap[r.tipo] || '') + '">' + (tnome[r.tipo] || r.tipo) + '</span></td>' +
+      '<td><strong style="font-size:12px">' + r.nome + '</strong><br><span style="font-size:10px;color:#6b7280">' + (r.idade || '') + ' · ' + (r.sexo || '') + '</span>' + (r.mae ? '<br><span style="font-size:10px;color:#9ca3af">Mãe: ' + r.mae + '</span>' : '') + '</td>' +
+      '<td style="font-size:11px">' + (r.sus || '') + '</td>' +
+      '<td style="font-size:11px">' + (r.tel1 || '') + (r.tel2 ? '<br>' + r.tel2 : '') + '</td>' +
+      '<td style="font-size:11px;color:#6b7280">' + (r.endereco || '') + (r.setor ? '<br>' + r.setor : '') + '</td>' +
+      '<td style="font-size:11px;color:#6b7280;max-width:150px">' + (r.descricao || '').substring(0, 55) + ((r.descricao || '').length > 55 ? '…' : '') + '</td>' +
+      '<td style="text-align:center"><label class="ck-wrap" title="' + (r.verificado_em ? 'Verificado: ' + r.verificado_em : 'Pendente') + '"><input type="checkbox" ' + (r.verificado ? 'checked' : '') + ' onchange="verificar(' + r.id + ',this.checked)">' + (r.verificado ? '<span class="bx bv" style="font-size:10px">✓ OK</span>' : '') + '</label></td>' +
+      '<td style="white-space:nowrap">' +
+      '<button class="ab" onclick="imprimirById(' + r.id + ')" title="Imprimir">🖨️</button>' +
+      '<button class="ab" onclick="zapById(' + r.id + ')" title="WhatsApp">📲</button>' +
+      '<button class="ab" onclick="excluir(' + r.id + ')" title="Excluir">🗑️</button>' +
+      '</td></tr>';
+  }
+  tb.innerHTML = html;
 }
 
-// ============================================================
+function imprimirById(id) { var r = D.find(function(x) { return x.id === id; }); if(r) imprimir(r); }
+function zapById(id) { var r = D.find(function(x) { return x.id === id; }); if(r) zap(r); }
+
+// =============================================
 // EXCEL
-// ============================================================
-function xls(){
-  if(!D.length){ toast('Nenhum dado para exportar.',false); return; }
-  const rows = D.map(r=>({
-    'Protocolo':r.protocolo,'Data Cadastro':r.data_cadastro,'Situação':r.situacao,'Tipo':r.tipo,
-    'Nome':r.nome,'Dt. Nasc.':r.data_nasc?new Date(r.data_nasc+'T12:00').toLocaleDateString('pt-BR'):'',
-    'Idade':r.idade,'Sexo':r.sexo,'N° SUS':r.sus,
-    'Mãe/Responsável':r.mae,'Endereço':r.endereco,'Setor/Bairro':r.setor,
-    'Tel. 1':r.tel1,'Tel. 2':r.tel2,'Descrição/Itens':r.descricao,
-    'Servidor':r.servidor,'Observações':r.obs,
-    'Verificado':r.verificado?'Sim':'Não','Verificado Em':r.verificado_em||''
-  }));
-  const wb=XLSX.utils.book_new();
-  const ws=XLSX.utils.json_to_sheet(rows);
-  ws['!cols']=[{wch:12},{wch:13},{wch:22},{wch:30},{wch:32},{wch:12},{wch:10},{wch:5},{wch:20},{wch:30},{wch:35},{wch:20},{wch:17},{wch:17},{wch:55},{wch:24},{wch:30},{wch:10},{wch:20}];
-  XLSX.utils.book_append_sheet(wb,ws,'DAF Trindade');
-  XLSX.writeFile(wb,'DAF_Trindade_'+new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')+'.xlsx');
+// =============================================
+function xls() {
+  if (!D.length) { toast('Nenhum dado para exportar.', false); return; }
+  var rows = D.map(function(r) {
+    return {
+      'Protocolo': r.protocolo, 'Data': r.data_cadastro, 'Situação': r.situacao, 'Tipo': r.tipo,
+      'Nome': r.nome, 'Dt. Nasc.': r.data_nasc ? new Date(r.data_nasc + 'T12:00').toLocaleDateString('pt-BR') : '',
+      'Idade': r.idade, 'Sexo': r.sexo, 'N° SUS': r.sus,
+      'Mãe/Responsável': r.mae, 'Endereço': r.endereco, 'Setor': r.setor,
+      'Tel. 1': r.tel1, 'Tel. 2': r.tel2, 'Descrição': r.descricao,
+      'Servidor': r.servidor, 'Obs': r.obs,
+      'Verificado': r.verificado ? 'Sim' : 'Não', 'Verificado Em': r.verificado_em || ''
+    };
+  });
+  var wb = XLSX.utils.book_new();
+  var ws = XLSX.utils.json_to_sheet(rows);
+  ws['!cols'] = [{wch:12},{wch:12},{wch:22},{wch:30},{wch:30},{wch:12},{wch:10},{wch:5},{wch:18},{wch:28},{wch:35},{wch:18},{wch:16},{wch:16},{wch:50},{wch:22},{wch:28},{wch:10},{wch:20}];
+  XLSX.utils.book_append_sheet(wb, ws, 'DAF Trindade');
+  XLSX.writeFile(wb, 'DAF_Trindade_' + new Date().toLocaleDateString('pt-BR').replace(/\//g, '-') + '.xlsx');
   toast('✓ Excel exportado!');
 }
 
-// ============================================================
+// =============================================
 // IMPRIMIR
-// ============================================================
-function imprimir(r){
-  if(!r){ toast('Registro não encontrado.',false); return; }
-  const nasc = r.data_nasc ? new Date(r.data_nasc+'T12:00').toLocaleDateString('pt-BR') : '';
-  const end  = [r.endereco, r.setor].filter(Boolean).join(' — ');
-  const tits = {
-    'Materiais Hospitalares / Curativo':'Abertura de Processo — Materiais Hospitalares / Curativo',
-    'Fraldas':'Abertura de Processo — Fornecimento de Fraldas',
-    'Leites Especiais':'Abertura de Processo de Leites Especiais da Atenção Assistida',
-    'Medicamentos Não Padronizados':'Abertura de Processo — Medicamentos Não Padronizados'
+// =============================================
+function imprimir(r) {
+  var nasc = r.data_nasc ? new Date(r.data_nasc + 'T12:00').toLocaleDateString('pt-BR') : '';
+  var end  = [r.endereco, r.setor].filter(Boolean).join(' — ');
+  var tits = {
+    'Materiais Hospitalares / Curativo': 'Abertura de Processo — Materiais Hospitalares / Curativo',
+    'Fraldas': 'Abertura de Processo — Fornecimento de Fraldas',
+    'Leites Especiais': 'Abertura de Processo de Leites Especiais da Atenção Assistida',
+    'Medicamentos Não Padronizados': 'Abertura de Processo — Medicamentos Não Padronizados'
   };
-  const titulo = tits[r.tipo] || 'Abertura de Processo — Assistência Farmacêutica';
-  const sitL   = r.situacao==='Novo Protocolo' ? 'NOVO PROTOCOLO' : 'ATUALIZAÇÃO DE CADASTRO';
-  const sitC   = r.situacao==='Novo Protocolo' ? '#0f6e56' : '#854f0b';
-  const sitBg  = r.situacao==='Novo Protocolo' ? '#e1f5ee' : '#faeeda';
+  var titulo = tits[r.tipo] || 'Abertura de Processo — Assistência Farmacêutica';
+  var sitL  = r.situacao === 'Novo Protocolo' ? 'NOVO PROTOCOLO' : 'ATUALIZAÇÃO DE CADASTRO';
+  var sitC  = r.situacao === 'Novo Protocolo' ? '#0f6e56' : '#854f0b';
+  var sitBg = r.situacao === 'Novo Protocolo' ? '#e1f5ee' : '#faeeda';
+  var desc  = (r.descricao || '').replace(/\n/g, '<br>');
+  var obs   = (r.obs || '').replace(/\n/g, '<br>');
 
-  const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
-<title>Processo ${r.protocolo}</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;font-size:11pt;color:#000;padding:18mm 16mm 14mm}
-.hdr{display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;border-bottom:2.5px solid #1a5276;margin-bottom:12px}
-.hl{display:flex;align-items:center;gap:12px}
-.lg{border:2px solid #1a5276;border-radius:6px;padding:5px 10px;font-size:11pt;font-weight:700;color:#1a5276;line-height:1.3;text-align:center}
-.hr{text-align:right;font-size:9pt;color:#555;line-height:1.6}
-.sb{text-align:center;padding:7px;border-radius:4px;font-weight:700;font-size:12pt;margin-bottom:10px;letter-spacing:.06em;border-style:solid;border-width:1.5px}
-h1{font-size:12pt;font-weight:700;text-align:center;text-transform:uppercase;margin:0 0 12px;padding:7px;border:1.5px solid #1a5276;border-radius:4px;color:#1a5276;letter-spacing:.03em}
-table{width:100%;border-collapse:collapse;margin-bottom:7px}
-td{border:1px solid #000;padding:5px 8px;font-size:10.5pt;vertical-align:top}
-.lb{font-weight:700;background:#d6eaf8;width:32%}
-.ct{text-align:center}
-.pr{text-align:center;font-weight:700;font-size:14pt;border:2.5px solid #1a5276;padding:9px;margin:8px 0;border-radius:4px;color:#1a5276;background:#eaf3f8}
-.tl{text-align:center;font-size:11pt;border:1px solid #888;padding:7px;margin-bottom:7px;border-radius:3px}
-.tt{font-size:9pt;background:#eaf3f8;border:1px solid #85c1e9;border-radius:3px;padding:2px 8px;color:#0c447c;margin-left:8px;font-weight:normal}
-.sg{margin-top:46px;text-align:center}
-.sl{border-top:1px solid #000;width:55%;margin:0 auto 5px}
-.ft{font-size:8.5pt;text-align:center;margin-top:22px;padding-top:7px;border-top:1px solid #ccc;color:#666}
-@media print{body{padding:12mm 10mm}@page{margin:10mm}}
-</style></head><body>
-<div class="hdr">
-  <div class="hl">
-    <div class="lg">PREFEITURA<br>TRINDADE</div>
-    <div><strong style="font-size:13pt;color:#1a5276">PREFEITURA DE TRINDADE</strong><br>
-    <span style="font-size:9.5pt;color:#555">Secretaria de Saúde — Departamento de Assistência Farmacêutica</span></div>
-  </div>
-  <div class="hr">Centro Administrativo Pedro Pereira da Silva<br>Trindade — Goiás<br>Tel: (62) 3506-7236</div>
-</div>
-<div class="sb" style="background:${sitBg};color:${sitC};border-color:${sitC}">${sitL}</div>
-<h1>${titulo}</h1>
-<table>
-  <tr><td colspan="4" class="ct" style="font-size:13pt;font-weight:700">${r.nome}<span class="tt">${r.tipo}</span></td></tr>
-  <tr><td class="lb">Data de Nascimento:</td><td>${nasc}</td><td class="lb">Idade:</td><td>${r.idade||''}</td></tr>
-  <tr><td class="lb">Sexo:</td><td>${r.sexo==='M'?'Masculino':'Feminino'}</td><td class="lb">N°SUS:</td><td>${r.sus||''}</td></tr>
-  <tr><td class="lb">Nome da Mãe/Responsável:</td><td colspan="3">${r.mae||''}</td></tr>
-  <tr><td class="lb">Endereço:</td><td colspan="3">${end}</td></tr>
-  <tr><td class="lb">Data do Cadastro:</td><td colspan="3">${r.data_cadastro||''}</td></tr>
-</table>
-<div class="pr">NR. PROTOCOLO: ${r.protocolo}</div>
-<div class="tl">Telefone: ${r.tel1||''}${r.tel2?' / '+r.tel2:''}</div>
-<table>
-  <tr>
-    <td style="width:62%;vertical-align:top"><strong>Itens solicitados:</strong><br><br>${(r.descricao||'').replace(/\n/g,'<br>')}</td>
-    <td style="width:38%;vertical-align:top"><strong>Obs:</strong><br><br>${(r.obs||'').replace(/\n/g,'<br>')}</td>
-  </tr>
-</table>
-<div class="tl" style="margin-top:7px">INFORMAÇÕES: (62) 3506-7236 — Servidor: ${r.servidor||''}</div>
-<div class="sg"><div style="height:52px"></div><div class="sl"></div><p>Responsável</p></div>
-<div class="ft">Centro Administrativo Pedro Pereira da Silva — Secretaria da Saúde – Trindade – GO | Telefone: (62) 3506-7236</div>
-</body></html>`;
+  var html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Processo ' + r.protocolo + '</title>' +
+'<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;font-size:11pt;color:#000;padding:18mm 16mm 14mm}' +
+'.hdr{display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;border-bottom:2.5px solid #1a5276;margin-bottom:12px}' +
+'.hl{display:flex;align-items:center;gap:12px}.lg{border:2px solid #1a5276;border-radius:6px;padding:5px 10px;font-size:11pt;font-weight:700;color:#1a5276;line-height:1.3;text-align:center}' +
+'.hr{text-align:right;font-size:9pt;color:#555;line-height:1.6}' +
+'.sb{text-align:center;padding:7px;border-radius:4px;font-weight:700;font-size:12pt;margin-bottom:10px;letter-spacing:.06em;border-style:solid;border-width:1.5px}' +
+'h1{font-size:12pt;font-weight:700;text-align:center;text-transform:uppercase;margin:0 0 12px;padding:7px;border:1.5px solid #1a5276;border-radius:4px;color:#1a5276;letter-spacing:.03em}' +
+'table{width:100%;border-collapse:collapse;margin-bottom:7px}td{border:1px solid #000;padding:5px 8px;font-size:10.5pt;vertical-align:top}' +
+'.lb{font-weight:700;background:#d6eaf8;width:32%}.ct{text-align:center}' +
+'.pr{text-align:center;font-weight:700;font-size:14pt;border:2.5px solid #1a5276;padding:9px;margin:8px 0;border-radius:4px;color:#1a5276;background:#eaf3f8}' +
+'.tl{text-align:center;font-size:11pt;border:1px solid #888;padding:7px;margin-bottom:7px;border-radius:3px}' +
+'.tt{font-size:9pt;background:#eaf3f8;border:1px solid #85c1e9;border-radius:3px;padding:2px 8px;color:#0c447c;margin-left:8px;font-weight:normal}' +
+'.sg{margin-top:46px;text-align:center}.sl{border-top:1px solid #000;width:55%;margin:0 auto 5px}' +
+'.ft{font-size:8.5pt;text-align:center;margin-top:22px;padding-top:7px;border-top:1px solid #ccc;color:#666}' +
+'@media print{body{padding:12mm 10mm}@page{margin:10mm}}</style></head><body>' +
+'<div class="hdr"><div class="hl"><div class="lg">PREFEITURA<br>TRINDADE</div>' +
+'<div><strong style="font-size:13pt;color:#1a5276">PREFEITURA DE TRINDADE</strong><br>' +
+'<span style="font-size:9.5pt;color:#555">Secretaria de Saúde — Departamento de Assistência Farmacêutica</span></div></div>' +
+'<div class="hr">Centro Administrativo Pedro Pereira da Silva<br>Trindade — Goiás<br>Tel: (62) 3506-7236</div></div>' +
+'<div class="sb" style="background:' + sitBg + ';color:' + sitC + ';border-color:' + sitC + '">' + sitL + '</div>' +
+'<h1>' + titulo + '</h1>' +
+'<table><tr><td colspan="4" class="ct" style="font-size:13pt;font-weight:700">' + r.nome + '<span class="tt">' + r.tipo + '</span></td></tr>' +
+'<tr><td class="lb">Data de Nascimento:</td><td>' + nasc + '</td><td class="lb">Idade:</td><td>' + (r.idade || '') + '</td></tr>' +
+'<tr><td class="lb">Sexo:</td><td>' + (r.sexo === 'M' ? 'Masculino' : 'Feminino') + '</td><td class="lb">N°SUS:</td><td>' + (r.sus || '') + '</td></tr>' +
+'<tr><td class="lb">Nome da Mãe/Responsável:</td><td colspan="3">' + (r.mae || '') + '</td></tr>' +
+'<tr><td class="lb">Endereço:</td><td colspan="3">' + end + '</td></tr>' +
+'<tr><td class="lb">Data do Cadastro:</td><td colspan="3">' + (r.data_cadastro || '') + '</td></tr></table>' +
+'<div class="pr">NR. PROTOCOLO: ' + r.protocolo + '</div>' +
+'<div class="tl">Telefone: ' + (r.tel1 || '') + (r.tel2 ? ' / ' + r.tel2 : '') + '</div>' +
+'<table><tr><td style="width:62%;vertical-align:top"><strong>Itens solicitados:</strong><br><br>' + desc + '</td>' +
+'<td style="width:38%;vertical-align:top"><strong>Obs:</strong><br><br>' + obs + '</td></tr></table>' +
+'<div class="tl" style="margin-top:7px">INFORMAÇÕES: (62) 3506-7236 — Servidor: ' + (r.servidor || '') + '</div>' +
+'<div class="sg"><div style="height:52px"></div><div class="sl"></div><p>Responsável</p></div>' +
+'<div class="ft">Centro Administrativo Pedro Pereira da Silva — Secretaria da Saúde – Trindade – GO | Telefone: (62) 3506-7236</div>' +
+'</body></html>';
 
-  const blob = new Blob([html],{type:'text/html;charset=utf-8'});
-  const url2 = URL.createObjectURL(blob);
-  const w = window.open(url2,'_blank');
-  if(w){ setTimeout(()=>{ try{w.print();}catch(e){} },900); }
-  else{ toast('Permita pop-ups para imprimir.',false); }
+  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  var url  = URL.createObjectURL(blob);
+  var w    = window.open(url, '_blank');
+  if (w) { setTimeout(function() { try { w.print(); } catch(e) {} }, 900); }
+  else   { toast('Permita pop-ups para imprimir.', false); }
 }
 
-// ============================================================
+// =============================================
 // WHATSAPP
-// ============================================================
-function zap(r){
-  if(!r){ toast('Registro não encontrado.',false); return; }
-  const tel=(r.tel1||'').replace(/\D/g,'');
-  if(!tel){ toast('Paciente sem telefone.',false); return; }
-  const end=[r.endereco,r.setor].filter(Boolean).join(', ');
-  const msg=encodeURIComponent(
-    '*Prefeitura de Trindade — Secretaria de Saúde*\n*Departamento de Assistência Farmacêutica (DAF)*\n\n'+
-    'Prezado(a) responsável,\n\n'+
-    '📋 *Protocolo:* '+r.protocolo+'\n🗂️ *Tipo:* '+r.tipo+'\n📌 *Situação:* '+r.situacao+
-    '\n👤 *Paciente:* '+r.nome+'\n🏠 *Endereço:* '+end+'\n📅 *Data:* '+r.data_cadastro+
-    '\n\n📦 *Itens solicitados:*\n'+(r.descricao||'—')+
-    (r.obs?'\n\n📝 *Obs:* '+r.obs:'')+
-    '\n\nℹ️ Informações: (62) 3506-7236\n👩‍💼 Servidor: '+(r.servidor||'DAF Trindade')
+// =============================================
+function zap(r) {
+  var tel = (r.tel1 || '').replace(/\D/g, '');
+  if (!tel) { toast('Paciente sem telefone.', false); return; }
+  var end = [r.endereco, r.setor].filter(Boolean).join(', ');
+  var msg = encodeURIComponent(
+    '*Prefeitura de Trindade — Secretaria de Saúde*\n*Departamento de Assistência Farmacêutica (DAF)*\n\n' +
+    'Prezado(a) responsável,\n\n' +
+    '📋 *Protocolo:* ' + r.protocolo + '\n🗂️ *Tipo:* ' + r.tipo + '\n📌 *Situação:* ' + r.situacao +
+    '\n👤 *Paciente:* ' + r.nome + '\n🏠 *Endereço:* ' + end + '\n📅 *Data:* ' + r.data_cadastro +
+    '\n\n📦 *Itens solicitados:*\n' + (r.descricao || '—') +
+    (r.obs ? '\n\n📝 *Obs:* ' + r.obs : '') +
+    '\n\nℹ️ Informações: (62) 3506-7236\n👩‍💼 Servidor: ' + (r.servidor || 'DAF Trindade')
   );
-  window.open('https://wa.me/55'+tel+'?text='+msg,'_blank');
+  window.open('https://wa.me/55' + tel + '?text=' + msg, '_blank');
 }
 
-// ============================================================
-// INIT
-// ============================================================
+// =============================================
+// CONFIGURAR
+// =============================================
+async function testar() {
+  var url = document.getElementById('cfg-url').value.trim();
+  var key = document.getElementById('cfg-key').value.trim();
+  if (!url || !key) { toast('Preencha URL e Key', false); return; }
+  localStorage.setItem('sb_url', url);
+  localStorage.setItem('sb_key', key);
+  sb = window.supabase.createClient(url, key);
+  setStatus('conn', 'Testando...');
+  try {
+    var res = await sb.from('solicitacoes').select('id').limit(1);
+    if (res.error) throw res.error;
+    setStatus('ok', 'Conectado ✓');
+    toast('✅ Conexão estabelecida!');
+    var msg = document.getElementById('cfg-msg');
+    msg.style.display = 'block';
+    msg.style.color = '#0f6e56';
+    msg.textContent = '✅ Conectado com sucesso!';
+  } catch(e) {
+    setStatus('err', 'Falha');
+    toast('❌ Falha: ' + e.message, false);
+  }
+}
+
+function resetCfg() {
+  localStorage.removeItem('sb_url');
+  localStorage.removeItem('sb_key');
+  document.getElementById('cfg-url').value = SB_URL;
+  document.getElementById('cfg-key').value = SB_KEY;
+  toast('Credenciais restauradas para o padrão.');
+}
+
+// =============================================
+// INICIALIZAÇÃO
+// =============================================
 document.getElementById('f-data').value = new Date().toISOString().split('T')[0];
-initSupabase();
-checkConfig();
+initSB();
+
+// Testa conexão automaticamente
+setTimeout(async function() {
+  if (sb) {
+    try {
+      var res = await sb.from('solicitacoes').select('id').limit(1);
+      if (res.error) throw res.error;
+      setStatus('ok', 'Conectado ✓');
+    } catch(e) {
+      setStatus('err', 'Erro de conexão');
+      console.error('Auto-connect error:', e);
+    }
+  }
+}, 1000);
 </script>
 </body>
 </html>
