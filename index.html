@@ -102,7 +102,12 @@ table.dt tr.vfd td{background:#f0fdf4;color:#6b7280}
     </div>
     <input type="hidden" id="f-sit">
     <div class="g2">
-      <div><label>Número do protocolo <span class="req">*</span></label><input type="text" id="f-proto" placeholder="Ex: 24/2026" maxlength="12"></div>
+      <div><label>Número do protocolo <span class="req">*</span></label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="text" id="f-proto" placeholder="Ex: 001/06.26" maxlength="12" style="flex:1">
+          <button type="button" onclick="gerarProtocolo()" style="white-space:nowrap;padding:8px 12px;background:#1a5276;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0">🔢 Gerar</button>
+        </div>
+      </div>
       <div><label>Data do cadastro</label><input type="date" id="f-data"></div>
     </div>
     <div style="margin-bottom:8px"><label>Tipo de solicitação <span class="req">*</span></label></div>
@@ -611,6 +616,24 @@ function resetCfg() {
   document.getElementById('cfg-url').value = SB_URL;
   document.getElementById('cfg-key').value = SB_KEY;
   toast('Credenciais restauradas para o padrão.');
+}
+
+// =============================================
+// GERAR PROTOCOLO AUTOMÁTICO
+// =============================================
+function gerarProtocolo() {
+  var n = new Date();
+  var mes = String(n.getMonth() + 1).padStart(2, '0');
+  var ano = String(n.getFullYear()).slice(-2);
+
+  // Pega sequencial salvo para este mês/ano
+  var chave = 'proto_seq_' + mes + ano;
+  var seq = parseInt(localStorage.getItem(chave) || '0') + 1;
+  localStorage.setItem(chave, String(seq));
+
+  var proto = String(seq).padStart(3, '0') + '/' + mes + '.' + ano;
+  document.getElementById('f-proto').value = proto;
+  toast('Protocolo gerado: ' + proto);
 }
 
 // =============================================
