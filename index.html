@@ -83,22 +83,40 @@ table.dt tr.vfd td{background:#f0fdf4;color:#6b7280}
   <div class="bar-st"><div class="dot conn" id="dot"></div><span id="st-txt">Conectando...</span></div>
 </div>
 
-<nav>
+<nav id="main-nav" style="display:none">
   <button class="nb on" id="nb-f" onclick="nav('f')">📋 Nova Solicitação</button>
   <button class="nb" id="nb-p" onclick="abrirPainel()">📊 Painel DAF</button>
-  <button class="nb" id="nb-c" onclick="nav('c')">⚙️ Configurar</button>
+  <button class="nb" id="nb-c" onclick="nav('c')" id="nb-c-btn">⚙️ Configurar</button>
+  <button class="nb" onclick="logout()" style="flex:0;padding:12px 16px;color:#dc2626">🚪 Sair</button>
 </nav>
 
-<!-- MODAL SENHA -->
-<div id="modal-senha" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center">
+<!-- TELA DE LOGIN -->
+<div id="tela-login" style="position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#1a5276 0%,#154360 100%);z-index:9999;display:flex;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:16px;padding:36px 32px;max-width:380px;width:90%;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,.3)">
+    <img id="login-logo" style="height:52px;margin-bottom:16px;display:block;margin-left:auto;margin-right:auto">
+    <h2 style="font-size:17px;font-weight:700;color:#1a5276;margin-bottom:4px">Assistência Farmacêutica</h2>
+    <p style="font-size:12px;color:#9ca3af;margin-bottom:24px">Prefeitura de Trindade — DAF</p>
+    <div style="text-align:left;margin-bottom:16px">
+      <label style="font-size:12px;font-weight:600;color:#374151;margin-bottom:4px;display:block">Senha de acesso</label>
+      <input type="password" id="login-senha" placeholder="Digite sua senha..."
+        style="width:100%;padding:11px 14px;border:1.5px solid #d1d5db;border-radius:8px;font-size:14px;letter-spacing:3px;text-align:center"
+        onkeydown="if(event.key==='Enter') fazerLogin()">
+    </div>
+    <div id="login-erro" style="color:#dc2626;font-size:12px;margin-bottom:12px;display:none">❌ Senha incorreta. Tente novamente.</div>
+    <button onclick="fazerLogin()" style="width:100%;padding:12px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;background:#1a5276;color:#fff">Entrar</button>
+  </div>
+</div>
+
+<!-- MODAL SENHA PAINEL -->
+<div id="modal-senha" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.55);z-index:998;align-items:center;justify-content:center">
   <div style="background:#fff;border-radius:12px;padding:32px 28px;max-width:360px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.25)">
     <div style="font-size:40px;margin-bottom:12px">🔒</div>
-    <h2 style="font-size:16px;font-weight:700;color:#1a5276;margin-bottom:6px">Acesso Restrito</h2>
-    <p style="font-size:13px;color:#6b7280;margin-bottom:20px">Digite a senha para acessar o Painel DAF</p>
-    <input type="password" id="input-senha" placeholder="Digite a senha..." 
+    <h2 style="font-size:16px;font-weight:700;color:#1a5276;margin-bottom:6px">Painel Restrito</h2>
+    <p style="font-size:13px;color:#6b7280;margin-bottom:20px">Este painel é exclusivo para a gestora DAF.</p>
+    <input type="password" id="input-senha" placeholder="Senha da gestora..."
       style="width:100%;padding:10px 14px;border:1.5px solid #d1d5db;border-radius:8px;font-size:14px;margin-bottom:12px;text-align:center;letter-spacing:4px"
       onkeydown="if(event.key==='Enter') confirmarSenha()">
-    <div id="senha-erro" style="color:#dc2626;font-size:12px;margin-bottom:10px;display:none">❌ Senha incorreta. Tente novamente.</div>
+    <div id="senha-erro" style="color:#dc2626;font-size:12px;margin-bottom:10px;display:none">❌ Senha incorreta.</div>
     <div style="display:flex;gap:10px">
       <button onclick="fecharModal()" style="flex:1;padding:10px;border:1.5px solid #d1d5db;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#374151">Cancelar</button>
       <button onclick="confirmarSenha()" style="flex:1;padding:10px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#1a5276;color:#fff">Entrar</button>
@@ -636,17 +654,53 @@ function resetCfg() {
 }
 
 // =============================================
-// SENHA DO PAINEL
+// SISTEMA DE LOGIN
 // =============================================
-var SENHA_PAINEL = 'DAF@2026';  // ← ALTERE AQUI PARA SUA SENHA
+var SENHA_ATENDENTE = 'daf123';   // senha da atendente
+var SENHA_GESTORA   = 'DAF1401';  // senha da Vanessa (acesso total)
+
+function fazerLogin() {
+  var s = document.getElementById('login-senha').value;
+  if (s === SENHA_GESTORA) {
+    sessionStorage.setItem('daf_perfil', 'gestora');
+    document.getElementById('tela-login').style.display = 'none';
+    document.getElementById('main-nav').style.display = 'flex';
+    // mostra aba configurar para gestora
+    document.getElementById('nb-c-btn') && (document.getElementById('nb-c-btn').style.display = '');
+    nav('f');
+    toast('Bem-vinda, Vanessa! ✅');
+  } else if (s === SENHA_ATENDENTE) {
+    sessionStorage.setItem('daf_perfil', 'atendente');
+    document.getElementById('tela-login').style.display = 'none';
+    document.getElementById('main-nav').style.display = 'flex';
+    // esconde aba configurar para atendente
+    var nbC = document.getElementById('nb-c');
+    if(nbC) nbC.style.display = 'none';
+    nav('f');
+    toast('Bem-vinda! ✅');
+  } else {
+    document.getElementById('login-erro').style.display = 'block';
+    document.getElementById('login-senha').value = '';
+    document.getElementById('login-senha').focus();
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('daf_perfil');
+  sessionStorage.removeItem('daf_auth');
+  document.getElementById('main-nav').style.display = 'none';
+  document.getElementById('tela-login').style.display = 'flex';
+  document.getElementById('login-senha').value = '';
+  document.getElementById('login-erro').style.display = 'none';
+}
 
 function abrirPainel() {
-  // Se já autenticado nesta sessão, abre direto
-  if (sessionStorage.getItem('daf_auth') === '1') {
+  var perfil = sessionStorage.getItem('daf_perfil');
+  if (perfil === 'gestora') {
     nav('p');
     return;
   }
-  // Mostra modal de senha
+  // atendente tenta acessar painel
   var modal = document.getElementById('modal-senha');
   modal.style.display = 'flex';
   document.getElementById('input-senha').value = '';
@@ -656,8 +710,8 @@ function abrirPainel() {
 
 function confirmarSenha() {
   var digitada = document.getElementById('input-senha').value;
-  if (digitada === SENHA_PAINEL) {
-    sessionStorage.setItem('daf_auth', '1');
+  if (digitada === SENHA_GESTORA) {
+    sessionStorage.setItem('daf_perfil', 'gestora');
     fecharModal();
     nav('p');
   } else {
@@ -693,6 +747,24 @@ function gerarProtocolo() {
 // INICIALIZAÇÃO
 // =============================================
 document.getElementById('f-data').value = new Date().toISOString().split('T')[0];
+
+// Set logo on login screen
+var logoEl = document.getElementById('login-logo');
+if(logoEl) {
+  var logoImg = document.querySelector('.bar img');
+  if(logoImg) logoEl.src = logoImg.src;
+}
+
+// Check if already logged in this session
+if(sessionStorage.getItem('daf_perfil')) {
+  document.getElementById('tela-login').style.display = 'none';
+  document.getElementById('main-nav').style.display = 'flex';
+  if(sessionStorage.getItem('daf_perfil') === 'atendente') {
+    var nbC2 = document.getElementById('nb-c');
+    if(nbC2) nbC2.style.display = 'none';
+  }
+}
+
 initSB();
 
 // Testa conexão automaticamente
